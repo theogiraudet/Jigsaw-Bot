@@ -5,6 +5,7 @@ import { Koa } from "@discordx/koa";
 import type { Interaction, Message } from "discord.js";
 import { Intents } from "discord.js";
 import { Client } from "discordx";
+import { eventEmitter } from "./emitter.js";
 
 export const bot = new Client({
   // To only use global commands (use @Guild for specific guild command), comment this line
@@ -31,6 +32,8 @@ export const bot = new Client({
 bot.once("ready", async () => {
   // Make sure all guilds are cached
   await bot.guilds.fetch();
+  await bot.clearApplicationCommands();
+  await bot.clearApplicationCommands("546281071751331840");
 
   // Synchronize applications commands with Discord
   await bot.initApplicationCommands();
@@ -50,6 +53,10 @@ bot.once("ready", async () => {
 });
 
 bot.on("interactionCreate", (interaction: Interaction) => {
+  if(interaction.isButton()) {
+      const handled = eventEmitter.emit(interaction.customId, interaction)
+      if(handled) return
+  }
   bot.executeInteraction(interaction);
 });
 
