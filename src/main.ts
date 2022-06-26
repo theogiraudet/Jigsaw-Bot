@@ -5,7 +5,7 @@ import { Koa } from "@discordx/koa";
 import type { Interaction, Message } from "discord.js";
 import { Intents } from "discord.js";
 import { Client } from "discordx";
-import { eventEmitter } from "./emitter.js";
+import { eventBus } from "./event-bus.js";
 
 export const bot = new Client({
   // To only use global commands (use @Guild for specific guild command), comment this line
@@ -54,7 +54,7 @@ bot.once("ready", async () => {
 
 bot.on("interactionCreate", (interaction: Interaction) => {
   if(interaction.isButton()) {
-      const handled = eventEmitter.emit(interaction.customId, interaction)
+      const handled = eventBus.emit(interaction.customId, interaction)
       if(handled) return
   }
   bot.executeInteraction(interaction);

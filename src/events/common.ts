@@ -2,7 +2,6 @@ import type { ArgsOf, Client } from "discordx";
 import { Discord, On } from "discordx";
 import ical from 'node-ical';
 import { createCalendar } from "../calendar/calendar.js";
-import { eventEmitter } from "../emitter.js";
 
 @Discord()
 export class Example {

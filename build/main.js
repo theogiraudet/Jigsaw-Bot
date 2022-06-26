@@ -3,6 +3,7 @@ import { dirname, importx } from "@discordx/importer";
 import { Koa } from "@discordx/koa";
 import { Intents } from "discord.js";
 import { Client } from "discordx";
+import { eventBus } from "./event-bus.js";
 export const bot = new Client({
     // To only use global commands (use @Guild for specific guild command), comment this line
     botGuilds: [(client) => client.guilds.cache.map((guild) => guild.id)],
@@ -24,6 +25,8 @@ export const bot = new Client({
 bot.once("ready", async () => {
     // Make sure all guilds are cached
     await bot.guilds.fetch();
+    await bot.clearApplicationCommands();
+    await bot.clearApplicationCommands("546281071751331840");
     // Synchronize applications commands with Discord
     await bot.initApplicationCommands();
     // Synchronize applications command permissions with Discord
@@ -38,6 +41,11 @@ bot.once("ready", async () => {
     console.log("Bot started");
 });
 bot.on("interactionCreate", (interaction) => {
+    if (interaction.isButton()) {
+        const handled = eventBus.emit(interaction.customId, interaction);
+        if (handled)
+            return;
+    }
     bot.executeInteraction(interaction);
 });
 bot.on("messageCreate", (message) => {
@@ -69,3 +77,4 @@ async function run() {
     // ************* rest api section: end **********
 }
 run();
+//# sourceMappingURL=main.js.map

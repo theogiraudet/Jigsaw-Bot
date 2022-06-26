@@ -54,3 +54,4 @@ Group = __decorate([
     SlashGroup({ name: "maths", root: "testing" })
 ], Group);
 export { Group };
+//# sourceMappingURL=slash%20group.js.map

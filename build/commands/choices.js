@@ -40,3 +40,4 @@ Example = __decorate([
     Discord()
 ], Example);
 export { Example };
+//# sourceMappingURL=choices.js.map

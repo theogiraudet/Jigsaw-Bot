@@ -58,3 +58,4 @@ Example = __decorate([
     Discord()
 ], Example);
 export { Example };
+//# sourceMappingURL=menu.js.map

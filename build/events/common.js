@@ -9,14 +9,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Discord, On } from "discordx";
 import ical from 'node-ical';
-import { createCalendar } from "../calendar/calendar";
+import { createCalendar } from "../calendar/calendar.js";
 let Example = class Example {
     onMessage([message], client) {
         console.log("Message Deleted", client.user?.username, message.content);
     }
     onReady() {
         console.log('Parse calendar');
-        const data = ical.async.fromURL('https://planning.univ-rennes1.fr/jsp/custom/modules/plannings/53ykdlnj.shu')
+        ical.async.fromURL('https://planning.univ-rennes1.fr/jsp/custom/modules/plannings/PnR1EOY8.shu')
             .then(data => createCalendar("ISTIC", data));
     }
 };
@@ -36,3 +36,4 @@ Example = __decorate([
     Discord()
 ], Example);
 export { Example };
+//# sourceMappingURL=common.js.map
