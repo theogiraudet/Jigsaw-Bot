@@ -43,3 +43,4 @@ API = __decorate([
     Router()
 ], API);
 export { API };
+//# sourceMappingURL=guilds.js.map

@@ -8,6 +8,7 @@ import { parseDate } from "../../utils/date-utils.js";
 import { organiseEmbedFieldToPages } from "../../utils/embed-utils.js";
 import { groupBy } from "../../utils/list-utils.js";
 import { reduceIfToLong } from "../../utils/message-utils.js";
+import { properties } from "../../properties.js";
 
 @Discord()
 @SlashGroup({name: "timetable", description: "Foo" })
@@ -64,8 +65,8 @@ export class TimeTable {
         var options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit' }
         var hourOptions: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit' }
         return {
-            day: event.start.toLocaleDateString('fr-FR', options),
-            hours: event.start.toLocaleTimeString('fr-FR', hourOptions) + ' - ' + event.end.toLocaleTimeString('fr-FR', hourOptions),
+            day: event.start.toLocaleDateString(properties.locale, options),
+            hours: event.start.toLocaleTimeString(properties.locale, hourOptions) + ' - ' + event.end.toLocaleTimeString(properties.locale, hourOptions),
             data: `__**Évènement :**__ ${event.summary}
             __**Lieu :**__ ${event.location}
             __**Description :**__ ${event.description.trim().replaceAll('\n', ' ')}`.replace(/\n\s+/g, '\n')

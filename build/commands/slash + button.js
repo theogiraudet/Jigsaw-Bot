@@ -47,3 +47,4 @@ Example = __decorate([
     Discord()
 ], Example);
 export { Example };
+//# sourceMappingURL=slash%20+%20button.js.map

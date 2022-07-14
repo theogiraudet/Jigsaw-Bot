@@ -37,3 +37,4 @@ SlashExample = __decorate([
     Discord()
 ], SlashExample);
 export { SlashExample };
+//# sourceMappingURL=slashes.js.map

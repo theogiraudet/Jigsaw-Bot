@@ -63,3 +63,4 @@ Example = __decorate([
     Discord()
 ], Example);
 export { Example };
+//# sourceMappingURL=simple%20command.js.map

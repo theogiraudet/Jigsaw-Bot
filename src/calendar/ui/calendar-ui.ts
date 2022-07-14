@@ -1,8 +1,9 @@
-import { ButtonInteraction, CommandInteraction, InteractionReplyOptions, InteractionUpdateOptions, MessageActionRow, MessageButton, MessageEmbed } from "discord.js";
+import { ButtonInteraction, CacheType, CommandInteraction, GuildCacheMessage, InteractionReplyOptions, InteractionUpdateOptions, Message, MessageActionRow, MessageButton, MessageEmbed, TextBasedChannel } from "discord.js";
 import { interpret } from "xstate";
 import { calendarUiMachine } from "./calendar-ui-machine.js";
 import {v4 as uuidv4} from 'uuid';
-import { eventEmitter } from "../../emitter.js";
+import { eventBus } from "../../event-bus.js";
+import { properties } from "../../properties.js";
 
 const baseNextButton = "next-"
 const basePreviousButton = "previous-"
@@ -10,7 +11,7 @@ const basePreviousButton = "previous-"
 export class CalendarUi {
 
     private pages: MessageEmbed[]
-    private readonly stateMachine;
+    private readonly stateMachine
     private readonly buttons: MessageActionRow
 
     private readonly uiId: string
@@ -36,13 +37,17 @@ export class CalendarUi {
         
         this.stateMachine = interpret(stateMachine)
         this.stateMachine.start()
-        
-        eventEmitter.on(previousButton.customId!, (interaction: ButtonInteraction) => this.previous(interaction))
-        eventEmitter.on(nextButton.customId!, (interaction: ButtonInteraction) => this.next(interaction))
+        eventBus.on(previousButton.customId!, (interaction: ButtonInteraction) => this.previous(interaction))
+        eventBus.on(nextButton.customId!, (interaction: ButtonInteraction) => this.next(interaction))
     }
 
     public async buildUi(interaction: ButtonInteraction | CommandInteraction) {
-        await interaction.reply(this.getUpdate())
+        const previousButton = this.buttons.components[0]
+        const nextButton = this.buttons.components[1]
+        const timeout = eventBus.on(previousButton.customId!, (interaction: ButtonInteraction) => this.previous(interaction), () => this.expire(message.id, interaction.channel!))
+        this.pages.forEach(page => page.setFooter({text: "Expiration à " + timeout.toLocaleTimeString(properties.locale)}))
+        eventBus.on(nextButton.customId!, (interaction: ButtonInteraction) => this.next(interaction))
+        const message = await interaction.reply({ ...this.getUpdate(), fetchReply: true })
     }
 
     private async next(interaction: ButtonInteraction) {
@@ -56,7 +61,12 @@ export class CalendarUi {
     }
 
     private async updateUi(interaction: ButtonInteraction) {
-        interaction.update(this.getUpdate())
+        await interaction.update(this.getUpdate())
+    }
+
+    private async expire(id: string, channel: TextBasedChannel) {
+        const message = (await channel.messages.fetch(id))
+        await message.edit({embeds: message.embeds.map(embed => embed.setFooter({text: "Menu expiré"}))})
     }
 
     private getUpdate(): InteractionUpdateOptions & InteractionReplyOptions {
