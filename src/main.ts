@@ -1,11 +1,12 @@
 import "reflect-metadata";
-
 import { dirname, importx } from "@discordx/importer";
 import { Koa } from "@discordx/koa";
 import type { Interaction, Message } from "discord.js";
 import { Intents } from "discord.js";
 import { Client } from "discordx";
 import { eventEmitter } from "./emitter.js";
+import { AppDataSource } from "./data-source.js";
+import { User } from "./User.js";
 
 export const bot = new Client({
   // To only use global commands (use @Guild for specific guild command), comment this line
@@ -71,7 +72,7 @@ async function run() {
 
   // The following syntax should be used in the ECMAScript environment
   await importx(
-    dirname(import.meta.url) + "/{events,commands,api}/**/*.{ts,js}"
+    dirname(import.meta.url) + "/**/{events,commands,api}/**/*.{ts,js}"
   );
 
   // Let's start the bot
@@ -100,4 +101,9 @@ async function run() {
   // ************* rest api section: end **********
 }
 
-run();
+AppDataSource.initialize().then(async () => {
+
+  console.log("Data source initialized.")
+  run()
+
+}).catch(error => console.log(error))

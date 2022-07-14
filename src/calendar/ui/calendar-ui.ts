@@ -2,7 +2,7 @@ import { ButtonInteraction, CommandInteraction, InteractionReplyOptions, Interac
 import { interpret } from "xstate";
 import { calendarUiMachine } from "./calendar-ui-machine.js";
 import {v4 as uuidv4} from 'uuid';
-import { eventEmitter } from "../emitter.js";
+import { eventEmitter } from "../../emitter.js";
 
 const baseNextButton = "next-"
 const basePreviousButton = "previous-"
@@ -37,8 +37,8 @@ export class CalendarUi {
         this.stateMachine = interpret(stateMachine)
         this.stateMachine.start()
         
-        eventEmitter.on(previousButton.customId!, interaction => this.previous(interaction))
-        eventEmitter.on(nextButton.customId!, interaction => this.next(interaction))
+        eventEmitter.on(previousButton.customId!, (interaction: ButtonInteraction) => this.previous(interaction))
+        eventEmitter.on(nextButton.customId!, (interaction: ButtonInteraction) => this.next(interaction))
     }
 
     public async buildUi(interaction: ButtonInteraction | CommandInteraction) {

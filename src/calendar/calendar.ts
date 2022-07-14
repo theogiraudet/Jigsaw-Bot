@@ -1,6 +1,6 @@
 import ical, { VEvent } from "node-ical";
 
-class Calendar {
+export class Calendar {
 
     private readonly calendar: VEvent[]
     private readonly name: string
